@@ -1,4 +1,4 @@
-#include "../include/c_types.h"
+#include "../include/c_wrapper.h"
 
 
 /*
@@ -19,7 +19,8 @@
  *=======================================================================================
  */
 i32_t read_ata_sector(void *device, u32_t lba, void *buffer, i32_t count){
-
+      read_ata_sector_cxx_wrapper(lba, buffer, count);
+      return 1;
 }
 
 /*
@@ -43,4 +44,6 @@ i32_t read_ata_sector(void *device, u32_t lba, void *buffer, i32_t count){
  *=======================================================================================
  */
 i32_t write_ata_sector(void *device, u32_t lba, void *buffer, i32_t count){
+      write_ata_sector_cxx_wrapper(lba, buffer, count);
+      return 1;
 }
