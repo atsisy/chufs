@@ -2,6 +2,7 @@
 #include "../include/types.hpp"
 #include "../include/value.hpp"
 #include "../include/vfs.hpp"
+#include "../include/cmdline_wiz.hpp"
 
 i8_t init(int argc, char **argv);
 i8_t translate_command(std::string command);
@@ -30,7 +31,7 @@ int main(int argc, char **argv){
 
       while(true){
             std::cout << "> ";
-            std::cin >> command;
+            std::getline(std::cin, command);
             translate_command(command);
       }
 
@@ -57,11 +58,13 @@ i8_t init(int argc, char **argv){
 
 i8_t translate_command(std::string command){
 
+      CommandLineWiz wiz(command.data());
+
       try{
-            manager->CallCmdFunction(command);
+            manager->CallCmdFunction(wiz.At(0));
       }
       catch(std::out_of_range&){
-            std::cerr << "command not found: " << command << std::endl;
+            std::cerr << "command not found: " << wiz.At(0) << std::endl;
       }
 
       return SUCCESS;

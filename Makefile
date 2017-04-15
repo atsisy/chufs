@@ -4,7 +4,8 @@ INCLUDE = ./include
 SRC = ./src
 DST = ./dst
 BIN = ./bin
-OBJS = $(DST)/main.o $(DST)/vfs.o
+UTIL = ./src/util
+OBJS = $(DST)/main.o $(DST)/vfs.o $(DST)/cmdline_wiz.o
 
 all: $(OBJS) Makefile
 	mkdir -p dst
@@ -18,3 +19,7 @@ clean:
 $(DST)/%.o: $(SRC)/%.cc
 	mkdir -p dst
 	$(CXX) $(CFLAGS) -g -c -o $(DST)/$*.o $(SRC)/$*.cc $(LDFLAGS)
+
+$(DST)/%.o: $(UTIL)/%.cc
+	mkdir -p dst
+	$(CXX) $(CFLAGS) -g -c -o $(DST)/$*.o $(UTIL)/$*.cc $(LDFLAGS)
