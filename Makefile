@@ -5,7 +5,7 @@ SRC = ./src
 DST = ./dst
 BIN = ./bin
 UTIL = ./src/util
-OBJS = $(DST)/main.o $(DST)/vfs.o $(DST)/cmdline_wiz.o
+OBJS = $(DST)/main.o $(DST)/vfs.o $(DST)/cmdline_wiz.o $(DST)/shell.o
 
 all: $(OBJS) Makefile
 	mkdir -p dst

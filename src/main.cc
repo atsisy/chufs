@@ -3,6 +3,7 @@
 #include "../include/value.hpp"
 #include "../include/vfs.hpp"
 #include "../include/cmdline_wiz.hpp"
+#include "../include/shell.hpp"
 
 i8_t init(int argc, char **argv);
 i8_t translate_command(std::string command);
@@ -27,25 +28,15 @@ int main(int argc, char **argv){
             exit(-1);
       }
 
-      std::string command;
-
-      while(true){
-            std::cout << "> ";
-            std::getline(std::cin, command);
-            translate_command(command);
-      }
-
+      Shell shell;
+      shell.MainLoop(manager);
 
       return 0;
 }
 
 i8_t init(int argc, char **argv){
 
-      if(argc > 1)
-            manager = new CHVFS_MANAGER(argv[1]);
-      else
-            manager = new CHVFS_MANAGER();
-
+      manager = (argc > 1) ? new CHVFS_MANAGER(argv[1]) : new CHVFS_MANAGER();
 
       if(IS_NULLPO(manager))
             return FAILURE;
@@ -56,16 +47,3 @@ i8_t init(int argc, char **argv){
       return SUCCESS;
 }
 
-i8_t translate_command(std::string command){
-
-      CommandLineWiz wiz(command.data());
-
-      try{
-            manager->CallCmdFunction(wiz.At(0));
-      }
-      catch(std::out_of_range&){
-            std::cerr << "command not found: " << wiz.At(0) << std::endl;
-      }
-
-      return SUCCESS;
-}
