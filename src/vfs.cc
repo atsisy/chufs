@@ -32,6 +32,31 @@ static inline void just_alloc(std::ofstream *ofs, std::ifstream *ifs){
       ifs = new std::ifstream();
 }
 
+/*
+ *=======================================================================================
+ *VirtualFS::Seekメソッド
+ *指定したlbaにシークするメソッド
+ *=======================================================================================
+ */
+void VirtualFS::Seek(u64_t lba){
+      reader->seekg(lba * block_size, std::ios_base::beg);
+      writer->seekp(lba * block_size, std::ios_base::beg);
+}
+
+void VirtualFS::ReadSector(u64_t lba, char *buffer){
+      reader->seekg(lba * block_size, std::ios_base::beg);
+      reader->read(buffer, block_size);
+}
+
+void VirtualFS::WriteSector(u64_t lba, char *buffer){
+      writer->seekp(lba * block_size, std::ios_base::beg);
+      writer->write(buffer, block_size);
+}
+
+void VirtualFS::MoveBufferPointer(char **buffer){
+      *buffer += block_size;
+}
+
 CHVFS_MANAGER::CHVFS_MANAGER( u16_t block_size){
       this->vfs_file = new VirtualFS(block_size);
       this->function_table = new Function_Table();
@@ -48,4 +73,28 @@ void CHVFS_MANAGER::RegisterCmdFunction(std::string command, std::function<u64_t
 
 void CHVFS_MANAGER::CallCmdFunction(std::string command){
       this->function_table->at(command)(command);
+}
+
+void CHVFS_MANAGER::Read(u32_t lba, void *buffer, i32_t count){
+      if(count <= 0)
+            return;
+
+      while(count){
+            vfs_file->ReadSector(lba, (char *)buffer);
+            vfs_file->MoveBufferPointer((char **)(&buffer));
+            ++lba;
+            --count;
+      }
+}
+
+void CHVFS_MANAGER::Write(u32_t lba, void *buffer, i32_t count){
+      if(count <= 0)
+            return;
+
+      while(count){
+            vfs_file->WriteSector(lba, (char *)buffer);
+            vfs_file->MoveBufferPointer((char **)(&buffer));
+            ++lba;
+            --count;
+      }
 }
