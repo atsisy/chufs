@@ -5,6 +5,8 @@
 #include "../include/cmdline_wiz.hpp"
 #include "../include/shell.hpp"
 
+#define BLOCK_SIZE 512
+
 i8_t init(int argc, char **argv);
 i8_t translate_command(std::string command);
 
@@ -36,7 +38,7 @@ int main(int argc, char **argv){
 
 i8_t init(int argc, char **argv){
 
-      manager = (argc > 1) ? new CHVFS_MANAGER(argv[1]) : new CHVFS_MANAGER();
+      manager = (argc > 1) ? new CHVFS_MANAGER(argv[1], BLOCK_SIZE) : new CHVFS_MANAGER(BLOCK_SIZE);
 
       if(IS_NULLPO(manager))
             return FAILURE;

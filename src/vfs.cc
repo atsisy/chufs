@@ -5,23 +5,26 @@ static void just_alloc(std::ofstream *ofs, std::ifstream *ifs);
 /*
  *=======================================================================================
  *VirtualFSクラスのコンストラクタ
-
  *=======================================================================================
  */
-VirtualFS::VirtualFS(std::string file_name){
+VirtualFS::VirtualFS(std::string file_name, u16_t block_size){
 
       just_alloc(writer, reader);
 
-      writer->open(file_name.c_str(), std::ios::out);
-      reader->open(file_name.c_str());
+      writer->open(file_name.c_str(), std::ios::binary | std::ios::out);
+      reader->open(file_name.c_str(), std::ios::binary | std::ios::in);
+
+      this->block_size = block_size;
 }
 
-VirtualFS::VirtualFS(){
+VirtualFS::VirtualFS(u16_t block_size){
 
       just_alloc(writer, reader);
 
       writer = new std::ofstream();
       reader = new std::ifstream();
+
+      this->block_size = block_size;
 }
 
 static inline void just_alloc(std::ofstream *ofs, std::ifstream *ifs){
@@ -29,13 +32,13 @@ static inline void just_alloc(std::ofstream *ofs, std::ifstream *ifs){
       ifs = new std::ifstream();
 }
 
-CHVFS_MANAGER::CHVFS_MANAGER(){
-      this->vfs_file = new VirtualFS();
+CHVFS_MANAGER::CHVFS_MANAGER( u16_t block_size){
+      this->vfs_file = new VirtualFS(block_size);
       this->function_table = new Function_Table();
 }
 
-CHVFS_MANAGER::CHVFS_MANAGER(std::string file_name){
-      this->vfs_file = new VirtualFS(file_name);
+CHVFS_MANAGER::CHVFS_MANAGER(std::string file_name, u16_t block_size){
+      this->vfs_file = new VirtualFS(file_name, block_size);
       this->function_table = new Function_Table();
 }
 
