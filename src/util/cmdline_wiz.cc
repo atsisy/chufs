@@ -45,7 +45,7 @@ static std::unique_ptr<std::string> str_shrink(std::unique_ptr<std::string> str,
  *=======================================================================================
  */
 CommandLineWiz::CommandLineWiz()
-      : origin(new std::string), word_vector(new std::vector<std::string>)
+      : origin(nullptr), word_vector(nullptr)
 {
       /*
        *メンバオブジェクトを生成するだけ
@@ -61,27 +61,8 @@ CommandLineWiz::CommandLineWiz()
  *コマンドを分割して、word_vectorにぶち込む
  *=======================================================================================
  */
-CommandLineWiz::CommandLineWiz(const char *command_line)
-      : word_vector(new std::vector<std::string>)
-{
-      //文字列の先頭がスペースになるのを防ぐ
-      while(*command_line == ' ') ++command_line;
-
-      //先頭のスペース除去後、originを設定
-      origin.reset(new std::string(command_line));
-
-      //StringStreamクラスを使って処理する
-      std::stringstream string_stream(command_line);
-      //一時的に使う文字列変数
-      std::string buffer;
-
-      //処理する過程で邪魔になる連続スペースを圧縮
-      origin = str_shrink(std::move(origin), 0, ' ');
-
-      //ここで分割して、word_vectorにぶち込む
-      while(std::getline(string_stream, buffer, ' ')) {
-            word_vector->push_back(buffer);
-      }
+CommandLineWiz::CommandLineWiz(const char *command_line){
+      Reset(command_line);
 }
 
 /*
@@ -110,3 +91,37 @@ std::string CommandLineWiz::At(int index){
       return word_vector->at(index);
 }
 
+/*
+ *=======================================================================================
+ *CommandLineWiz::Resetメソッド
+ *引数
+ *const char *command_line
+ *再設定用の文字列
+ *返り値
+ *なし
+ *=======================================================================================
+ */
+void CommandLineWiz::Reset(const char *command_line){
+
+      word_vector.reset(new std::vector<std::string>);
+
+      //文字列の先頭がスペースになるのを防ぐ
+      while(*command_line == ' ') ++command_line;
+
+      //先頭のスペース除去後、originを設定
+      origin.reset(new std::string(command_line));
+
+      //StringStreamクラスを使って処理する
+      std::stringstream string_stream(command_line);
+      //一時的に使う文字列変数
+      std::string buffer;
+
+      //処理する過程で邪魔になる連続スペースを圧縮
+      origin = str_shrink(std::move(origin), 0, ' ');
+
+      //ここで分割して、word_vectorにぶち込む
+      while(std::getline(string_stream, buffer, ' ')) {
+            word_vector->push_back(buffer);
+      }
+
+}
