@@ -14,6 +14,7 @@ extern "C" {
 #endif
       i32_t read_ata_sector_cxx_wrapper(u32_t lba, void *buffer, i32_t count);
       i32_t write_ata_sector_cxx_wrapper(u32_t lba, void *buffer, i32_t count);
+      void register_command_function(const char *command_name, long long int (*function)(const char *));
 #ifdef __cplusplus
 };
 #endif
