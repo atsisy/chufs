@@ -47,3 +47,19 @@ i32_t write_ata_sector(void *device, u32_t lba, void *buffer, i32_t count){
       write_ata_sector_cxx_wrapper(lba, buffer, count);
       return 1;
 }
+
+/*
+ *=======================================================================================
+ *register_command_function関数
+ *コマンドの関数テーブルに関数を登録する関数（C向けラッパ）
+ *引数
+ *const char *command_name
+ *対応するコマンド
+ *long long int (*function)(const char *)
+ *コマンドが入力された時に実行する関数
+ *返り値なし
+ *=======================================================================================
+ */
+void register_command_function(const char *command_name,  long long int (*function)(const char *)){
+      register_command_function_cxx_wrapper(command_name, function);
+}

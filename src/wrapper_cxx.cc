@@ -36,7 +36,7 @@ i32_t write_ata_sector_cxx_wrapper(u32_t lba, void *buffer, i32_t count){
  *そのコマンドが入力された時に実行される関数のポインタ
  *=======================================================================================
  */
-void register_command_function(const char *command_name, u64_t (*function)(const char *)){
+void register_command_function_cxx_wrapper(const char *command_name, u64_t (*function)(const char *)){
       manager->RegisterCmdFunction(std::string(command_name), [&](std::string command){
                   return function(command.data());
             });
