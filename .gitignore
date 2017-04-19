@@ -1,3 +1,7 @@
 dst
 bin
 *~
+GPATH
+GRTAGS
+GSYMS
+GTAGS
